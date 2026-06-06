@@ -1,71 +1,253 @@
-# News Topic Classification from Headlines: A Multi-Model Comparative Study
+# 📰 News Topic Classification from Headlines
 
-This repository contains the source code, data preprocessing pipelines, and experimental architectures designed for the automated classification of news headlines into four major domains: **Business**, **Science and Technology**, **World News**, and **Sports**. The study systematically evaluates the impact of text noise and linguistic normalization by pairing traditional machine learning and modern deep learning models against distinct text cleaning strategies.
-
-This project was conducted at the Department of Computer Science & Engineering, BRAC University, Dhaka, Bangladesh.
+### A Multi-Model Comparative Study
 
 ---
 
-## 📌 Project Overview
+## 📌 Overview
 
-- **Dataset Size:** 117,710 total rows before deduplication, yielding **95,727 unique news samples**.
-- **Task:** Short-text multi-class classification.
-- **Core Investigation:** Comparing sparse high-dimensional features (**TF-IDF**) against dense sequence-level aggregations (**Skip-gram** word vectors aggregated via **Smooth Inverse Frequency (SIF)** weighting).
-- **Architectures Evaluated:** Logistic Regression, Multi-Layer Perceptrons (DNN), and Recurrent Neural Networks (SimpleRNN, GRU, LSTM, and their Bidirectional variants).
+This project focuses on **automated news headline classification** using machine learning and deep learning techniques. The system categorizes news headlines into four distinct classes:
 
----
+* Business
+* Science & Technology
+* World News
+* Sports
 
-## 🛠️ Pipeline & Methodology
-
-### 1. Data Cleaning & Variants
-To isolate how text cleaning affects different model configurations, three distinct versions of the text were engineered:
-* **No Preprocessing (Raw):** Preserves original text structures, HTML tags, and web-scraped noise as a baseline.
-* **Extreme Stemming:** HTML/agency tags (e.g., *Reuters*, *AP*) are removed. Text is lowercased, stripped of digits/punctuation, and processed via the **Porter Stemmer**.
-* **Optimum Preprocessing:** Specialized linguistic values are mapped to descriptive placeholders (`MONEY`, `PERCENT`, `UNIT`) and structural terms are normalized via **WordNet Lemmatization** to protect syntax.
-
-### 2. Feature Vectorization
-* **TF-IDF:** Configured to extract 10,000 unigram and bigram features.
-* **Skip-gram:** Custom-trained 100-dimensional word vectors over a 5-word context window, mathematically downweighted using an alpha parameter through **SIF sentence embedding**.
+The study compares multiple preprocessing techniques, feature extraction methods, and model architectures to determine the most effective pipeline for short-text classification.
 
 ---
 
-## 📊 Model Architectures & Results
+## 👨‍💻 Authors
 
-The dataset uses an 85/15 train-validation split extracted from the first 83,727 rows. The remaining instances form a perfectly balanced **test set of 12,000 samples** (3,000 samples per class).
+* **Apurbo Sarkar**
+  CSE Department, BRAC University
+  📧 [apurbo.sarkar@g.bracu.ac.bd](mailto:apurbo.sarkar@g.bracu.ac.bd)
 
-### Performance Summary
-* **The Champion Configuration:** A Deep Neural Network (**MLP/DNN**) with 3 hidden layers ($256 \to 128 \to 64$ hidden units with ReLU activations) operating on **TF-IDF + Extreme Stemming**, achieving a peak Macro F1-score of **0.9170** and accuracy of **0.9169**.
-* **Baseline Baseline:** **Logistic Regression** achieved an F1-score of **0.9139** using completely **raw text**, showing that short headline contexts can often lose critical predictive signals when aggressively scrubbed.
-* **Recurrent Sequence Network:** Among dense embedding configurations, the **Bidirectional SimpleRNN** achieved the highest sequential model score of **0.9133** on raw text.
+* **Md. Abdulla Al Bari**
+  CSE Department, BRAC University
+  📧 [abdulla.al.bari@g.bracu.ac.bd](mailto:abdulla.al.bari@g.bracu.ac.bd)
 
-### Top Performing Configurations
-
-| Model | Embedding | Preprocessing Variant | Accuracy | Macro F1-Score |
-| :--- | :--- | :--- | :--- | :--- |
-| **DNN (MLP)** | **TF-IDF** | **Extreme Stemming** | **0.9169** | **0.9170** |
-| Logistic Regression | TF-IDF | No Preprocessing | 0.9140 | 0.9139 |
-| Bi-SimpleRNN | Skip-gram | No Preprocessing | 0.9131 | 0.9133 |
-| Bi-LSTM | Skip-gram | No Preprocessing | 0.9111 | 0.9112 |
+* **Md. Roby**
+  CSE Department, BRAC University
+  📧 [md.roby@g.bracu.ac.bd](mailto:md.roby@g.bracu.ac.bd)
 
 ---
 
-## 📈 Class-Specific Insights (Champion DNN)
-Analysis of the top-performing DNN model reveals that the **Sports** category is highly distinct and easiest to isolate, while semantic overlap slightly clusters between **Business** and **Science & Tech**:
+## 🎯 Objectives
 
-| Class | Precision | Recall | F1-Score | Support |
-| :--- | :--- | :--- | :--- | :--- |
-| Business | 0.88 | 0.89 | 0.88 | 3,000 |
-| Science & Tech. | 0.89 | 0.91 | 0.90 | 3,000 |
-| Sports | 0.97 | 0.97 | 0.97 | 3,000 |
-| World News | 0.94 | 0.89 | 0.91 | 3,000 |
+* Classify news headlines into predefined categories
+* Compare performance of:
+
+  * Traditional ML models
+  * Deep Neural Networks
+  * Recurrent Neural Networks
+* Evaluate impact of different preprocessing strategies
+* Analyze effectiveness of TF-IDF vs word embeddings
 
 ---
 
-## 💻 Repository Structure
-```text
-├── src/
-│   ├── data_preprocessing.py   # Tokenization, Stemming, Lemmatization pipeline
-│   ├── train_tfidf_models.py   # Training script for Logistic Regression & MLP
-│   └── train_rnn_models.py     # Word2Vec Skip-gram pipeline and Sequential RNNs
-├── requirements.txt            # Project dependencies
-└── README.md                   # Project description and results
+## 📊 Dataset
+
+* Total headlines: **117,710**
+* After cleaning: **95,727 unique samples**
+* Categories:
+
+  * World News
+  * Business
+  * Science & Technology
+  * Sports
+
+### Data Characteristics
+
+* Contains HTML noise from scraping
+* Moderate class imbalance
+* Short-text format (headlines only)
+
+---
+
+## ⚙️ Methodology
+
+### 1. Preprocessing Techniques
+
+Three versions of text were used:
+
+#### 🔹 No Preprocessing
+
+* Raw text with HTML tags
+* Baseline approach
+
+#### 🔹 Extreme Stemming
+
+* Remove HTML tags, punctuation, numbers
+* Lowercasing
+* Stopword removal
+* Porter Stemming
+
+#### 🔹 Optimum Preprocessing
+
+* Replace symbols (e.g., `$ → MONEY`, `% → PERCENT`)
+* WordNet Lemmatization
+* Clean but human-readable text
+
+---
+
+### 2. Feature Extraction
+
+#### 📌 TF-IDF
+
+* 10,000 features (unigrams + bigrams)
+* Used with:
+
+  * Logistic Regression
+  * Deep Neural Network
+
+#### 📌 Skip-gram Embeddings
+
+* 100-dimensional vectors
+* Context window: 5
+* Weighted using SIF (Smooth Inverse Frequency)
+* Used with RNN-based models
+
+---
+
+### 3. Models Used
+
+#### 🔹 Traditional ML
+
+* Logistic Regression (L2 regularization)
+
+#### 🔹 Deep Learning
+
+* Multi-Layer Perceptron (DNN)
+
+#### 🔹 Recurrent Neural Networks
+
+* SimpleRNN
+* GRU
+* LSTM
+* Bidirectional variants of all above
+
+---
+
+## 🧪 Training Setup
+
+* Train/Validation Split: **85% / 15%**
+* Test Set: **12,000 samples (balanced)**
+* Evaluation Metric:
+
+  * **Macro F1-score (primary)**
+  * Accuracy
+
+---
+
+## 📈 Results
+
+### 🏆 Best Model
+
+| Model         | Features | Preprocessing    | F1 Score   |
+| ------------- | -------- | ---------------- | ---------- |
+| **DNN (MLP)** | TF-IDF   | Extreme Stemming | **0.9170** |
+
+### 🥈 Second Best
+
+| Model               | Features | Preprocessing    | F1 Score |
+| ------------------- | -------- | ---------------- | -------- |
+| Logistic Regression | TF-IDF   | No Preprocessing | 0.9139   |
+
+---
+
+## 🔍 Key Findings
+
+* **TF-IDF outperformed word embeddings** for this task
+* **Extreme stemming improved DNN performance significantly**
+* **Logistic Regression performed strongly even on raw text**
+* **RNN models performed best with minimal preprocessing**
+* Sports category had the highest classification accuracy
+* Most confusion occurred between:
+
+  * Business
+  * Science & Technology
+
+---
+
+## 🧠 Model Insights
+
+### Why TF-IDF worked well:
+
+* Captures important keywords directly
+* Effective for short texts like headlines
+* Large dataset helps define strong boundaries
+
+### Why RNNs underperformed:
+
+* SIF removes word order
+* Headlines are short → limited sequence benefit
+
+---
+
+## ⚠️ Limitations
+
+* Residual noise in dataset
+* Loss of word order in TF-IDF
+* Slight class imbalance
+* Limited contextual understanding
+
+---
+
+## 🚀 Future Work
+
+* Implement transformer-based models (e.g., BERT)
+* Use contextual embeddings
+* Improve handling of semantic overlap
+* Experiment with hybrid architectures
+
+---
+
+## 🛠️ Technologies Used
+
+* Python
+* Scikit-learn
+* TensorFlow / Keras
+* NumPy / Pandas
+* NLP Libraries (NLTK, etc.)
+
+---
+
+## 🙏 Acknowledgment
+
+This work was conducted at the
+**Department of Computer Science & Engineering, BRAC University, Dhaka, Bangladesh**,
+with support for computational resources and research facilities.
+
+---
+
+## 📚 References
+
+* TF-IDF (Salton & Buckley, 1988)
+* Word2Vec Skip-gram (Mikolov et al., 2013)
+* SIF Embeddings (Arora et al., 2017)
+* Logistic Regression (Cox, 1958)
+* Perceptron (Rosenblatt, 1958)
+* LSTM (Hochreiter & Schmidhuber, 1997)
+* GRU (Cho et al., 2014)
+* Porter Stemmer (Porter, 1980)
+* NLTK (Bird et al., 2009)
+* TensorFlow (Abadi et al., 2016)
+
+---
+
+## ⭐ Contributing
+
+Contributions are welcome! Feel free to:
+
+* Fork the repo
+* Create a feature branch
+* Submit a pull request
+
+---
+
+## 📄 License
+
+This project is for academic and research purposes. Add a license if distributing publicly.
+
+---
